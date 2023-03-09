@@ -1,8 +1,9 @@
 import { TextInput, View, StyleSheet, Alert} from "react-native"
-import PrimaryButton from "../components/PrimaryButton"
+import PrimaryButton from "../components/ui/PrimaryButton"
 import { useState } from 'react'
+import Colors from '../constants/colors'
 
-export default function StartGameScreen(){
+export default function StartGameScreen({onPickNumber}){
     const [enteredNumber, setEnteredNumber] = useState('') //string binding to text input, number-pad returns string
 
     //handling input: use onChangeText of TextInput
@@ -22,7 +23,9 @@ export default function StartGameScreen(){
             [{text: 'Okay', style:'destructive', onPress: resetInputHandler}])
             return
         }
-        console.log('Valid Number')
+        //will execute App.js/pickedNumberHandler(chosenNumber)
+        //=> onPickNumber as a callback function with chosenNumber as an argument
+        onPickNumber(chosenNumber) 
     }
 
     return (
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16,
         marginTop: 100,
-        backgroundColor: 'purple',
+        backgroundColor: Colors.primary800,
         marginHorizontal: 24,
         borderRadius: 8,
         elevation: 8, //Android only
@@ -66,9 +69,9 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         fontSize: 32,
-        borderBottomColor: 'yellow',
+        borderBottomColor: Colors.accent500,
         borderBottomWidth: 2,
-        color: 'yellow',
+        color: Colors.accent500,
         marginVertical: 8,
         fontWeight: 'bold',
         textAlign: 'center' //text align with parent obj

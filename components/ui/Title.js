@@ -1,9 +1,6 @@
-import { Text, View, StyleSheet } from "react-native";
-
-
+import { Text, StyleSheet } from "react-native";
 //children is another kind of props, 
 //but refering to children does not need to creat a prop and pass in arguments
-import Colors from "../../constants/colors";
 export default function Title ({children}){
     return <Text style={styles.title}>{children}</Text>
 }
@@ -11,8 +8,8 @@ export default function Title ({children}){
 const styles = StyleSheet.create({
     //styling for titles
     title: {
+        fontFamily: 'open-sans-bold',
         fontSize: 24,
-        fontWeight: 'bold',
         color: 'white',
         textAlign: 'center', // use to align text
         borderWidth: 2,

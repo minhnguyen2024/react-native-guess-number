@@ -1,6 +1,9 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import Colors from '../../constants/colors'
 
+//Setting up props for custom components:
+//Pressable has onPress props, which will be used to build on-press event handlers
+//=> PrimaryButton has onPressPrimaryButton as a prop (built by using a acallback function)
 export default function PrimaryButton({children, onPrimaryButtonPress}){
     return (
         <View style={styles.buttonOuterContainer}>

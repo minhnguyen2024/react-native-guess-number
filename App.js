@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, ImageBackground, SafeAreaView} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'
+import { StatusBar } from 'expo-status-bar'
 
 //expo install expo-app-loading
 import AppLoading  from 'expo-app-loading'
@@ -61,19 +62,20 @@ export default function App() {
   }
 
   return (
-    <LinearGradient colors={[Colors.primary700, Colors.accent500]} style={styles.rootScreen}>
-      
-      <ImageBackground 
-      source={require('./assets/images/background.png')}
-      resizeMode="cover"
-      imageStyle={styles.backgroundImage}
-      style={styles.rootScreen}
-      >
-        
-      <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
-     
-      </ImageBackground>
-    </LinearGradient>
+    <>
+    <StatusBar style="light"/>
+      <LinearGradient colors={[Colors.primary700, Colors.accent500]} style={styles.rootScreen}> 
+        <ImageBackground 
+        source={require('./assets/images/background.png')}
+        resizeMode="cover"
+        imageStyle={styles.backgroundImage}
+        style={styles.rootScreen}
+        >
+        <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
+        </ImageBackground>
+      </LinearGradient>
+    </>
+    
   );
   //SafeAreaView to take care of different iPhone notchs
 }

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Alert} from "react-native";
+import { View, StyleSheet, Alert, Text, FlatList} from "react-native";
 import { useState, useEffect } from "react";
 import Title from "../components/ui/Title";
 import { NumberContainer } from "../components/game/NumberContainer";
@@ -6,7 +6,10 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import Card from "../components/ui/Card";
 import InstructionText from "../components/ui/InstructionText";
 import {Ionicons} from '@expo/vector-icons'
+import GuessLogItem from "../components/game/GuessLogItem";
 
+
+//being managed outside component => will not be reset/re-excecuted every for every change of state
 function generateRandomBetween(min, max, exclude){
     const randomNum = Math.floor(Math.random() * ( max - min )) + min;
     if (randomNum === exclude){
@@ -26,17 +29,23 @@ export default function GameScreen({userNumber, onGameOver}){
     const initialGuess = generateRandomBetween(1, 100, userNumber)
     // const initialGuess = generateRandomBetween(minBoundary, maxBoundary, userNumber)
     const [currentGuess, setCurrentGuess] = useState(initialGuess)
+    const [guessRounds, setGuessRounds] = useState([initialGuess])
     
     //useEffect will run after the states are set
     useEffect(()=>{
         if (currentGuess == userNumber){
-            onGameOver() //callback function to gameOverHandler
+            //communication from App.js to GameScreen.js
+            onGameOver(guessRounds.length) //callback function to App.js/gameOverHandler
         }
     }, [currentGuess, userNumber, onGameOver]) //useEffect execute when any of these dependencies change
 
+    useEffect(() =>{
+        minBoundary = 1
+        maxBoundary = 100
+    }, [])
+
 
     function nextGuessHandler(direction){ // 'lower' or 'greater'
-        console.log('button pressed')
         if ((direction ==='lower' && currentGuess < userNumber) 
         || (direction === 'greater' && currentGuess > userNumber)){
             Alert.alert("Don't lie", "You know that this is wrong...", [
@@ -45,11 +54,15 @@ export default function GameScreen({userNumber, onGameOver}){
             return
         }
         direction === 'lower' ? maxBoundary = currentGuess : minBoundary = currentGuess + 1
-        
         const newRandomNumber = generateRandomBetween(minBoundary, maxBoundary, currentGuess)
-        console.log(minBoundary,"-", "guess: ", newRandomNumber,"-", maxBoundary)
         setCurrentGuess(newRandomNumber)
+
+        //updating states that involves adding to old state => use function
+        setGuessRounds(prevGuessRound =>  [newRandomNumber, ...prevGuessRound])
+        // console.log(guessRounds)
     }
+
+    const guessRoundListLength = guessRounds.length
 
     return (  
         <View styles={styles.screen}>
@@ -68,6 +81,12 @@ export default function GameScreen({userNumber, onGameOver}){
                     </View>
                 </View>
             </Card>
+            <View style={styles.listContainer}>
+                <FlatList 
+                data={guessRounds} 
+                renderItem={(itemData) => <GuessLogItem roundNumber={guessRoundListLength - itemData.index} guess={itemData.item}></GuessLogItem>}
+                keyExtractor={(item) => item}/>
+            </View>
         </View>
     )
 }
@@ -85,5 +104,9 @@ const styles = StyleSheet.create({
     },
     instructionText:{
         marginBottom: 12
+    },
+    listContainer:{
+        flex: 1,
+        padding: 16
     }
 })
